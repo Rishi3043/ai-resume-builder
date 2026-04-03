@@ -1,0 +1,127 @@
+package com.example.demo.controller;
+
+import com.example.demo.entity.Resume;
+import com.example.demo.service.AtsAnalyzerService;
+import com.example.demo.dto.AtsAnalysisResponse;
+import com.example.demo.entity.User;
+import com.example.demo.repository.ResumeRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.JobMatchService;
+import com.example.demo.dto.JobMatchResponse;
+import com.example.demo.service.PdfService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@RequestMapping("/api/resumes")
+@CrossOrigin(origins = "http://localhost:3000")
+public class ResumeController {
+
+    private final ResumeRepository resumeRepository;
+    private final UserRepository userRepository;
+    private final AtsAnalyzerService atsAnalyzerService;
+    private final JobMatchService jobMatchService;
+    private final PdfService pdfService;
+
+    public ResumeController(
+            ResumeRepository resumeRepository,
+            UserRepository userRepository,
+            AtsAnalyzerService atsAnalyzerService,
+            JobMatchService jobMatchService,
+            PdfService pdfService) {
+
+        this.resumeRepository = resumeRepository;
+        this.userRepository = userRepository;
+        this.atsAnalyzerService = atsAnalyzerService;
+        this.jobMatchService = jobMatchService;
+        this.pdfService = pdfService;
+    }
+
+    // ✅ CREATE RESUME WITH IMAGE (🔥 FINAL FIX)
+    @PostMapping(value = "/user/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Resume> createResume(
+            @PathVariable Long userId,
+            @RequestPart("resume") Resume resume,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        try {
+            // 🔥 DEBUG
+            System.out.println("📥 RECEIVED RESUME: " + resume.getFullName());
+            System.out.println("📸 IMAGE PRESENT: " + (image != null));
+
+            // ✅ attach image
+            if (image != null && !image.isEmpty()) {
+                resume.setProfileImage(image.getBytes());
+                System.out.println("✅ IMAGE SAVED: " + image.getSize());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        resume.setUser(user);
+
+        if (resume.getTemplate() == null || resume.getTemplate().isEmpty()) {
+            resume.setTemplate("modern");
+        }
+
+        Resume saved = resumeRepository.save(resume);
+
+        System.out.println("💾 SAVED RESUME ID: " + saved.getId());
+
+        return ResponseEntity.ok(saved);
+    }
+
+    // ✅ GET ALL
+    @GetMapping
+    public ResponseEntity<List<Resume>> getAllResumes() {
+        return ResponseEntity.ok(resumeRepository.findAll());
+    }
+
+    // ✅ GET BY USER
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Resume>> getResumesByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(resumeRepository.findByUserId(userId));
+    }
+
+    // ✅ GET BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Resume> getResumeById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                resumeRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Not found"))
+        );
+    }
+
+    // ✅ DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteResume(@PathVariable Long id) {
+        resumeRepository.deleteById(id);
+        return ResponseEntity.ok("Deleted");
+    }
+
+    // ✅ PDF DOWNLOAD
+    @GetMapping("/{id}/download")
+    public ResponseEntity<byte[]> downloadResume(@PathVariable Long id) {
+
+        Resume resume = resumeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resume not found"));
+
+        byte[] pdf = pdfService.generatePdf(resume);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=resume-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+}
