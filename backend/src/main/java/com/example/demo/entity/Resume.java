@@ -34,7 +34,6 @@ public class Resume {
 
     // ===== PROFILE IMAGE =====
     @Lob
-    @Column(columnDefinition = "LONGBLOB")
     @JsonIgnore
     private byte[] profileImage;
 

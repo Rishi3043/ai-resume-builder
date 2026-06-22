@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class PdfController {
 
     @Autowired
-    private ResumeRepository resumeRepository;
-
+private ResumeRepository resumeRepository;
     @Autowired
     private PdfService pdfService;
 
