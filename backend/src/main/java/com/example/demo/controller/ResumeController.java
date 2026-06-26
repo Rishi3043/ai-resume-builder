@@ -151,25 +151,35 @@ public class ResumeController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<Resume> updateResumePost(
             @PathVariable Long id,
-            @RequestParam("resume") Resume resume,
+            @RequestParam(value = "fullName", required = false) String fullName,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "linkedin", required = false) String linkedin,
+            @RequestParam(value = "github", required = false) String github,
+            @RequestParam(value = "skills", required = false) String skills,
+            @RequestParam(value = "summary", required = false) String summary,
+            @RequestParam(value = "experience", required = false) String experience,
+            @RequestParam(value = "template", required = false) String template,
             @RequestParam(value = "image", required = false) MultipartFile image) {
 
         Resume existingResume = resumeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
 
         try {
-            // Update fields
-            existingResume.setFullName(resume.getFullName());
-            existingResume.setTitle(resume.getTitle());
-            existingResume.setEmail(resume.getEmail());
-            existingResume.setPhone(resume.getPhone());
-            existingResume.setLocation(resume.getLocation());
-            existingResume.setLinkedin(resume.getLinkedin());
-            existingResume.setGithub(resume.getGithub());
-            existingResume.setSummary(resume.getSummary());
-            existingResume.setSkills(resume.getSkills());
-            existingResume.setExperience(resume.getExperience());
-            existingResume.setTemplate(resume.getTemplate());
+            // Update fields if provided
+            if (fullName != null) existingResume.setFullName(fullName);
+            if (title != null) existingResume.setTitle(title);
+            if (email != null) existingResume.setEmail(email);
+            if (phone != null) existingResume.setPhone(phone);
+            if (location != null) existingResume.setLocation(location);
+            if (linkedin != null) existingResume.setLinkedin(linkedin);
+            if (github != null) existingResume.setGithub(github);
+            if (skills != null) existingResume.setSkills(skills);
+            if (summary != null) existingResume.setSummary(summary);
+            if (experience != null) existingResume.setExperience(experience);
+            if (template != null) existingResume.setTemplate(template);
 
             // Update image only if new one is provided
             if (image != null && !image.isEmpty()) {

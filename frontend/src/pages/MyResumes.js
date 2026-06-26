@@ -39,10 +39,17 @@ setEditingResume({
 const updateResume = async () => {
 try{
 const formData = new FormData();
-formData.append(
-  "resume",
-  new Blob([JSON.stringify(editingResume)], { type: "application/json" })
-);
+formData.append("fullName", editingResume.fullName);
+formData.append("title", editingResume.title);
+formData.append("email", editingResume.email);
+formData.append("phone", editingResume.phone);
+formData.append("location", editingResume.location);
+formData.append("linkedin", editingResume.linkedin);
+formData.append("github", editingResume.github);
+formData.append("skills", editingResume.skills);
+formData.append("summary", editingResume.summary);
+formData.append("experience", editingResume.experience);
+formData.append("template", editingResume.template);
 await axios.post(
 `${process.env.REACT_APP_API_URL}/api/resumes/${editingResume.id}/update`,
 formData,
