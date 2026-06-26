@@ -38,9 +38,19 @@ setEditingResume({
 
 const updateResume = async () => {
 try{
-await axios.put(
-`${process.env.REACT_APP_API_URL}/api/resumes/${editingResume.id}`,
-editingResume
+const formData = new FormData();
+formData.append(
+  "resume",
+  new Blob([JSON.stringify(editingResume)], { type: "application/json" })
+);
+await axios.post(
+`${process.env.REACT_APP_API_URL}/api/resumes/${editingResume.id}/update`,
+formData,
+{
+  headers: {
+    "Content-Type": "multipart/form-data"
+  }
+}
 );
 alert("Updated ✅");
 setEditingResume(null);
