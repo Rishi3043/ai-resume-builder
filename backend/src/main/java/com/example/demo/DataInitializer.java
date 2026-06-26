@@ -16,15 +16,14 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (!userRepository.existsById(3L)) {
+        if (userRepository.findByEmail("rishik@example.com").isPresent()) {
+            System.out.println("User already exists, skipping");
+        } else {
             User user = new User();
-            user.setId(3L);
             user.setName("Rishik Daggula");
             user.setEmail("rishik@example.com");
-            userRepository.save(user);
-            System.out.println("✅ User with id=3 created: Rishik Daggula");
-        } else {
-            System.out.println("ℹ️ User with id=3 already exists, skipping creation");
+            User savedUser = userRepository.save(user);
+            System.out.println("User created with ID: " + savedUser.getId());
         }
     }
 }
