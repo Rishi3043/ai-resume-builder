@@ -5,7 +5,7 @@ function TemplateSelector() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetch("http://https://ai-resume-builder-zg7u.onrender.com/api/templates")
+    fetch(`${process.env.REACT_APP_API_URL}/api/templates`)
       .then(res => res.json())
       .then(data => setTemplates(data))
       .catch(err => console.error(err));

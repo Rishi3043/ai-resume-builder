@@ -18,7 +18,7 @@ fetchResumes();
 
 const fetchResumes = async () => {
 try{
-const res = await axios.get(`http://https://ai-resume-builder-zg7u.onrender.com/api/resumes/user/${USER_ID}`);
+const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/resumes/user/${USER_ID}`);
 setResumes(res.data);
 }catch{
 console.log("Error loading resumes");
@@ -39,7 +39,7 @@ setEditingResume({
 const updateResume = async () => {
 try{
 await axios.put(
-`http://https://ai-resume-builder-zg7u.onrender.com/api/resumes/${editingResume.id}`,
+`${process.env.REACT_APP_API_URL}/api/resumes/${editingResume.id}`,
 editingResume
 );
 alert("Updated ✅");
@@ -54,7 +54,7 @@ const deleteResume = async (id) => {
 if(!window.confirm("Delete this resume?")) return;
 
 try{
-await axios.delete(`http://https://ai-resume-builder-zg7u.onrender.com/api/resumes/${id}`);
+await axios.delete(`${process.env.REACT_APP_API_URL}/api/resumes/${id}`);
 fetchResumes();
 }catch{
 alert("Delete failed");
@@ -62,7 +62,7 @@ alert("Delete failed");
 };
 
 const downloadResume = (id) => {
-window.open(`http://https://ai-resume-builder-zg7u.onrender.com/api/resumes/${id}/download`);
+window.open(`${process.env.REACT_APP_API_URL}/api/resumes/${id}/download`);
 };
 
 // ✅ ATS FIX

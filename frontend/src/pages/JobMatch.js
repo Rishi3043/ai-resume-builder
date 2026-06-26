@@ -27,7 +27,7 @@ setSelectedId(id);
 },[location.search]);
 
 const fetchResumes = async ()=>{
-const res = await axios.get("http://https://ai-resume-builder-zg7u.onrender.com/api/resumes/user/3");
+const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/resumes/user/3`);
 setResumes(res.data);
 };
 
@@ -41,7 +41,7 @@ return;
 setLoading(true);
 
 const res = await axios.post(
-`http://https://ai-resume-builder-zg7u.onrender.com/api/resumes/${selectedId}/match`,
+`${process.env.REACT_APP_API_URL}/api/resumes/${selectedId}/match`,
 jd,
 {headers:{"Content-Type":"text/plain"}}
 );

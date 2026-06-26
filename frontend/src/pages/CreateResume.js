@@ -56,7 +56,7 @@ function CreateResume() {
 
     try {
       const res = await axios.get(
-        "http://https://ai-resume-builder-zg7u.onrender.com/api/ai/generate-summary",
+        `${process.env.REACT_APP_API_URL}/api/ai/generate-summary`,
         {
           params: {
             fullName: resume.fullName,
@@ -103,7 +103,7 @@ function CreateResume() {
       console.log("SENDING FORM DATA");
 
       await axios.post(
-        "http://https://ai-resume-builder-zg7u.onrender.com/api/resumes/user/3",
+        `${process.env.REACT_APP_API_URL}/api/resumes/user/3`,
         formData,
         {
           headers: {
