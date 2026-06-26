@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import java.util.List;
+import java.util.Base64;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,7 +59,8 @@ public class ResumeController {
 
             // ✅ attach image
             if (image != null && !image.isEmpty()) {
-                resume.setProfileImage(image.getBytes());
+                String base64Image = Base64.getEncoder().encodeToString(image.getBytes());
+                resume.setProfileImage(base64Image);
                 System.out.println("✅ IMAGE SAVED: " + image.getSize());
             }
 

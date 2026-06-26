@@ -33,9 +33,9 @@ public class Resume {
     private String experience;
 
     // ===== PROFILE IMAGE =====
-    @Lob
+    @Column(columnDefinition = "TEXT")
     @JsonIgnore
-    private byte[] profileImage;
+    private String profileImage;
 
     // ===== USER RELATION =====
     @ManyToOne
@@ -154,11 +154,11 @@ public class Resume {
         this.experience = experience;
     }
 
-    public byte[] getProfileImage() {
+    public String getProfileImage() {
         return profileImage;
     }
 
-    public void setProfileImage(byte[] profileImage) {
+    public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
 

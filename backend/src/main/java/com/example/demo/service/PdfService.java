@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class PdfService {
 
         System.out.println("🔥 IMAGE NULL? " + (resume.getProfileImage() == null));
         System.out.println("🔥 IMAGE SIZE: " +
-                (resume.getProfileImage() != null ? resume.getProfileImage().length : "NULL"));
+                (resume.getProfileImage() != null && !resume.getProfileImage().isEmpty() ? resume.getProfileImage().length() : "NULL"));
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -84,9 +85,10 @@ public class PdfService {
         leftCell.setBorder(Rectangle.NO_BORDER);
 
         // PROFILE IMAGE
-        if (resume.getProfileImage() != null && resume.getProfileImage().length > 0) {
+        if (resume.getProfileImage() != null && !resume.getProfileImage().isEmpty()) {
             try {
-                Image img = Image.getInstance(resume.getProfileImage());
+                byte[] imageBytes = Base64.getDecoder().decode(resume.getProfileImage());
+                Image img = Image.getInstance(imageBytes);
                 img.scaleToFit(80, 80);
                 img.setAlignment(Image.ALIGN_CENTER);
                 leftCell.addElement(img);
@@ -259,11 +261,11 @@ public class PdfService {
     private void addProfileImage(Document doc, Resume resume) {
 
         try {
-            if (resume.getProfileImage() != null && resume.getProfileImage().length > 0) {
+            if (resume.getProfileImage() != null && !resume.getProfileImage().isEmpty()) {
 
                 System.out.println("📸 ADDING IMAGE TO PDF...");
 
-                byte[] imageBytes = resume.getProfileImage();
+                byte[] imageBytes = Base64.getDecoder().decode(resume.getProfileImage());
 
                 Image img = Image.getInstance(imageBytes);
 
