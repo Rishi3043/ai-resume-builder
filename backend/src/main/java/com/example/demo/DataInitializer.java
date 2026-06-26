@@ -17,7 +17,8 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.findByEmail("rishik@example.com").isPresent()) {
-            System.out.println("User already exists, skipping");
+            User existingUser = userRepository.findByEmail("rishik@example.com").get();
+            System.out.println("User already exists with ID: " + existingUser.getId() + ", skipping");
         } else {
             User user = new User();
             user.setName("Rishik Daggula");
