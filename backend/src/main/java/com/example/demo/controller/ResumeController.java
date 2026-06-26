@@ -105,6 +105,46 @@ public class ResumeController {
         );
     }
 
+    // ✅ UPDATE RESUME
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Resume> updateResume(
+            @PathVariable Long id,
+            @RequestPart("resume") Resume resume,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        Resume existingResume = resumeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resume not found"));
+
+        try {
+            // Update fields
+            existingResume.setFullName(resume.getFullName());
+            existingResume.setTitle(resume.getTitle());
+            existingResume.setEmail(resume.getEmail());
+            existingResume.setPhone(resume.getPhone());
+            existingResume.setLocation(resume.getLocation());
+            existingResume.setLinkedin(resume.getLinkedin());
+            existingResume.setGithub(resume.getGithub());
+            existingResume.setSummary(resume.getSummary());
+            existingResume.setSkills(resume.getSkills());
+            existingResume.setExperience(resume.getExperience());
+            existingResume.setTemplate(resume.getTemplate());
+
+            // Update image only if new one is provided
+            if (image != null && !image.isEmpty()) {
+                String base64Image = Base64.getEncoder().encodeToString(image.getBytes());
+                existingResume.setProfileImage(base64Image);
+                System.out.println("✅ IMAGE UPDATED: " + image.getSize());
+            }
+            // If no new image, keep existing profile_image unchanged
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Resume saved = resumeRepository.save(existingResume);
+        return ResponseEntity.ok(saved);
+    }
+
     // ✅ DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteResume(@PathVariable Long id) {
