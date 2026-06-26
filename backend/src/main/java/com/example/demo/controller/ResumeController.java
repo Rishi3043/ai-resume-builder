@@ -107,6 +107,7 @@ public class ResumeController {
 
     // ✅ UPDATE RESUME
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @CrossOrigin(origins = "*")
     public ResponseEntity<Resume> updateResume(
             @PathVariable Long id,
             @RequestParam("resume") Resume resume,
