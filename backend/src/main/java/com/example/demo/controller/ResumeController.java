@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/resumes")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ResumeController {
 
     private final ResumeRepository resumeRepository;
@@ -123,5 +123,25 @@ public class ResumeController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=resume-" + id + ".pdf")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdf);
+    }
+
+    // ✅ ATS ANALYZE
+    @GetMapping("/{id}/analyze")
+    public ResponseEntity<AtsAnalysisResponse> analyzeResume(@PathVariable Long id) {
+        Resume resume = resumeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resume not found"));
+        AtsAnalysisResponse response = atsAnalyzerService.analyzeResume(resume);
+        return ResponseEntity.ok(response);
+    }
+
+    // ✅ JOB MATCH
+    @PostMapping("/{id}/match")
+    public ResponseEntity<JobMatchResponse> matchJob(
+            @PathVariable Long id,
+            @RequestBody String jobDescription) {
+        Resume resume = resumeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resume not found"));
+        JobMatchResponse response = jobMatchService.analyzeJobMatch(resume, jobDescription);
+        return ResponseEntity.ok(response);
     }
 }
