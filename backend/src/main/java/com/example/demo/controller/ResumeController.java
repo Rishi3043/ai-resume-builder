@@ -109,8 +109,8 @@ public class ResumeController {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Resume> updateResume(
             @PathVariable Long id,
-            @RequestPart("resume") Resume resume,
-            @RequestPart(value = "image", required = false) MultipartFile image) {
+            @RequestParam("resume") Resume resume,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
 
         Resume existingResume = resumeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
