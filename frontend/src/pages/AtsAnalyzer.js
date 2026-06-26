@@ -28,7 +28,7 @@ analyzeATS(id);
 
 const fetchResumes = async () => {
 try{
-const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/resumes/user/3`);
+const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/resumes/user/1`);
 setResumes(res.data);
 }catch{
 console.log("Failed to load resumes");

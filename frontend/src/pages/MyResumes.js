@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function MyResumes(){
 
-const USER_ID = 3;
+const USER_ID = 1;
 
 const [resumes,setResumes] = useState([]);
 const [editingResume,setEditingResume] = useState(null);

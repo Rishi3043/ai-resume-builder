@@ -103,7 +103,7 @@ function CreateResume() {
       console.log("SENDING FORM DATA");
 
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/resumes/user/3`,
+        `${process.env.REACT_APP_API_URL}/api/resumes/user/1`,
         formData,
         {
           headers: {
